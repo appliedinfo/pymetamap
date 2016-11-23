@@ -11,6 +11,7 @@
 # limitations under the License.
 
 from collections import namedtuple
+import re
 
 FIELD_NAMES_MMI = ('index', 'mm', 'score', 'preferred_name', 'cui', 'semtypes',
                'trigger', 'location', 'pos_info', 'tree_codes')
@@ -35,6 +36,19 @@ class ConceptMMI(namedtuple('Concept', FIELD_NAMES_MMI)):
     @classmethod
     def from_mmi(this_class, line):
          fields = line.split('|')
+         trigger = fields[6]
+         trigger_strpd = trigger.strip("[]")
+         
+         # https://skr.nlm.nih.gov/papers/references/metamap06.pdf
+         # Ocular complications of myasthenia gravis
+         # mod([lexmatch([ocular]),inputmatch([Ocular]),tag(adj),tokens([ocular])])
+
+         lex_inputmatch = re.findall(r'\"[A-Z|a-z|\s|\W]+\"',trigger_strpd)
+         # lex_inputmatch = [lex_match, input_match]
+
+         inputmatch = lex_inputmatch[1]
+         fields[6] = inputmatch.strip('"')
+         
          return this_class(**dict(zip(FIELD_NAMES_MMI, fields)))
 
 class ConceptAA(namedtuple('Concept', FIELD_NAMES_AA)):
@@ -71,7 +85,6 @@ class Corpus(list):
         stream = iter(stream)
         corpus = this_class()
         for line in stream:
-            print line
             fields = line.split('|')
             if fields[1] == 'MMI':
                 corpus.append(ConceptMMI.from_mmi(line))
