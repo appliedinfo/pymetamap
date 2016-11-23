@@ -31,7 +31,8 @@ class MetaMap:
     @abc.abstractmethod
     def extract_concepts(self, sentences=None, ids=None,
                          filename=None, composite_phrase=4, 
-                         file_format='sldi', word_sense_disambiguation=True):
+                         file_format='sldi', word_sense_disambiguation=True,
+                         restrict_to_semtype=None):
        """ Extract concepts from a list of sentences using MetaMap. """
 
     @staticmethod

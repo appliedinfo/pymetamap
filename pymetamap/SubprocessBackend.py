@@ -31,7 +31,8 @@ class SubprocessBackend(MetaMap):
                          derivational_variants=False, ignore_word_order=False,
                          unique_acronym_variants=False,
                          prefer_multiple_concepts=False,
-                         ignore_stop_phrases=False, compute_all_mappings=False):
+                         ignore_stop_phrases=False, compute_all_mappings=False,
+                         restrict_to_semtype=None):
         """ extract_concepts takes a list of sentences and ids(optional)
             then returns a list of Concept objects extracted via
             MetaMap.
@@ -85,7 +86,11 @@ class SubprocessBackend(MetaMap):
 
             command = [self.metamap_filename, '-N']
             command.append('-Q')
+
             command.append(str(composite_phrase))
+            if restrict_to_semtype:
+                sem_types = (',').join(restrict_to_semtype)
+                command.append('-J '+sem_types)
             if word_sense_disambiguation:
                 command.append('-y')
             if allow_large_n:
@@ -128,6 +133,5 @@ class SubprocessBackend(MetaMap):
             else:
                 input_file.close()
             os.remove(output_file.name)
-
         concepts = Corpus.load(output.splitlines())
         return (concepts, error)
