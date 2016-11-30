@@ -21,11 +21,3 @@ __all__ = (MetaMap, Corpus)
 __authors__ = 'Anthony Rios'
 __version__ = '0.1'
 __email__ = 'anthonymrios@gmail.com'
-
-if __name__ == '__main__':
-	# from pymetamap import MetaMap
-	mm = MetaMap.get_instance('/Users/faizaanwani/projects/public_mm/bin/metamap16')
-	sents = ['Heart Attack', 'John had a huge heart attack']
-	concepts,error = mm.extract_concepts(sents,[1,2])
-	for concept in concepts:
-		print concept

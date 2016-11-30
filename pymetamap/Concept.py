@@ -43,10 +43,10 @@ class ConceptMMI(namedtuple('Concept', FIELD_NAMES_MMI)):
          # Ocular complications of myasthenia gravis
          # mod([lexmatch([ocular]),inputmatch([Ocular]),tag(adj),tokens([ocular])])
 
-         lex_inputmatch = re.findall(r'\"[A-Z|a-z|\s|\W]+\"',trigger_strpd)
+         lex_inputmatch = re.search(r'\"(.*)\"\-.*\-\"(.*)\"',trigger_strpd)
          # lex_inputmatch = [lex_match, input_match]
 
-         inputmatch = lex_inputmatch[1]
+         inputmatch = lex_inputmatch.group(2)
          fields[6] = inputmatch.strip('"')
          
          return this_class(**dict(zip(FIELD_NAMES_MMI, fields)))
