@@ -111,21 +111,24 @@ class SubprocessBackend(MetaMap):
                 command.append('-K')
             if compute_all_mappings:
                 command.append('-b')
+
+            #min parse text limit
+            command.append("--min_length 4")
+
             if ids is not None or (file_format == 'sldiID' and
                     sentences is None):
                 command.append('--sldiID')
             else:
                 command.append('--sldi')
+
             command.append(input_file.name)
             command.append(output_file.name)
-
             metamap_process = subprocess.Popen(command, stdout=subprocess.PIPE)
             while metamap_process.poll() is None:
                 stdout = metamap_process.stdout.readline()
                 if 'ERROR' in stdout:
                     metamap_process.terminate()
                     error = stdout.rstrip()
-                
             output = output_file.read()
         finally:       
             if sentences is not None:
