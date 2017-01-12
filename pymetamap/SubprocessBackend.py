@@ -32,7 +32,7 @@ class SubprocessBackend(MetaMap):
                          unique_acronym_variants=False,
                          prefer_multiple_concepts=False,
                          ignore_stop_phrases=False, compute_all_mappings=False,
-                         restrict_to_semtype=None):
+                         restrict_to_semtype=None, min_length=None, silent=None):
         """ extract_concepts takes a list of sentences and ids(optional)
             then returns a list of Concept objects extracted via
             MetaMap.
@@ -111,9 +111,10 @@ class SubprocessBackend(MetaMap):
                 command.append('-K')
             if compute_all_mappings:
                 command.append('-b')
-
-            #min parse text limit
-            command.append("--min_length 4")
+            if min_length:
+                command.append('--min_length ' + str(min_length))
+            if silent:
+                command.append('--silent')
 
             if ids is not None or (file_format == 'sldiID' and
                     sentences is None):
