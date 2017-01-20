@@ -57,22 +57,22 @@ class SubprocessBackend(MetaMap):
                   and whatever was processed, if anything, will be
                   returned along with the error found.
         """
-        if allow_acronym_variants and unique_acronym_variants:
-            raise ValueError("You can't use both allow_acronym_variants and "
-                             "unique_acronym_variants.")
-        if (sentences is not None and filename is not None) or \
-                (sentences is None and filename is None):
-            raise ValueError("You must either pass a list of sentences "
-                             "OR a filename.")
-        if file_format not in ['sldi','sldiID']:
-            raise ValueError("file_format must be either sldi or sldiID")
+        #if allow_acronym_variants and unique_acronym_variants:
+        #    raise ValueError("You can't use both allow_acronym_variants and "
+        #                     "unique_acronym_variants.")
+        #if (sentences is not None and filename is not None) or \
+        #        (sentences is None and filename is None):
+        #    raise ValueError("You must either pass a list of sentences "
+        #                     "OR a filename.")
+        #if file_format not in ['sldi','sldiID']:
+        #    raise ValueError("file_format must be either sldi or sldiID")
 
         input_file = None
         if sentences is not None:
-            input_file = tempfile.NamedTemporaryFile(delete=False)
+            input_file = tempfile.NamedTemporaryFile(delete=False, dir="/mnt/ramdisk")
         else:
             input_file = open(filename, 'r')
-        output_file = tempfile.NamedTemporaryFile(delete=False)
+        output_file = tempfile.NamedTemporaryFile(delete=False, dir="/mnt/ramdisk")
         error = None
         try:
             if sentences is not None:
@@ -91,36 +91,36 @@ class SubprocessBackend(MetaMap):
             if restrict_to_semtype:
                 sem_types = (',').join(restrict_to_semtype)
                 command.append('-J '+sem_types)
-            if word_sense_disambiguation:
-                command.append('-y')
-            if allow_large_n:
-                command.append('-l')
-            if no_derivational_variants:
-                command.append('-d')
-            if derivational_variants:
-                command.append('-D')
-            if ignore_word_order:
-                command.append('-i')
-            if allow_acronym_variants:
-                command.append('-a')
-            if unique_acronym_variants:
-                command.append('-u')
-            if prefer_multiple_concepts:
-                command.append('-Y')
-            if ignore_stop_phrases:
-                command.append('-K')
-            if compute_all_mappings:
-                command.append('-b')
+            #if word_sense_disambiguation:
+            #    command.append('-y')
+            #if allow_large_n:
+            #    command.append('-l')
+            #if no_derivational_variants:
+            #    command.append('-d')
+            #if derivational_variants:
+            #    command.append('-D')
+            #if ignore_word_order:
+            #    command.append('-i')
+            #if allow_acronym_variants:
+            #    command.append('-a')
+            #if unique_acronym_variants:
+            #    command.append('-u')
+            #if prefer_multiple_concepts:
+            #    command.append('-Y')
+            #if ignore_stop_phrases:
+            #    command.append('-K')
+            #if compute_all_mappings:
+            #    command.append('-b')
             if min_length:
                 command.append('--min_length ' + str(min_length))
-            if silent:
-                command.append('--silent')
+            #if silent:
+            command.append('--silent')
 
-            if ids is not None or (file_format == 'sldiID' and
-                    sentences is None):
-                command.append('--sldiID')
-            else:
-                command.append('--sldi')
+            #if ids is not None or (file_format == 'sldiID' and
+            #        sentences is None):
+            #    command.append('--sldiID')
+            #else:
+            #    command.append('--sldi')
 
             command.append(input_file.name)
             command.append(output_file.name)
